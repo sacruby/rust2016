@@ -70,10 +70,16 @@ struct Product {
 }
 
 impl Product {
-  fn filter(l: String, products: Vec<Self>) -> String {
-    "Fix me so I return a list of products filterd by the label
-     that is passed in".to_string()
-  }
+    fn filter(l: String, products: Vec<Self>) -> String {
+        let label = l.split(' ').collect::<Vec<&str>>()[2];
+        let mut products_string = String::new();
+        for product in products {
+          if product.label == label {
+            products_string = products_string + &format!("{:?}", product);
+          }
+        }
+        products_string
+    }
 }
 
 
@@ -101,5 +107,14 @@ fn run_program(command: String) -> String {
 // to filter products by the given label.
 
 fn run_cli(products: Vec<Product>, labels: Vec<Label>, command: String) -> String {
-
+    let mut std_out = "Invalid command".to_string();
+    if command == "ls products" {
+      std_out = format!("{:?}", products)
+    } else if command== "ls labels" {
+      std_out = format!("{:?}", labels);
+    } else if command.starts_with("filter by") {
+      std_out = Product::filter(command, products)
+    }
+    println!("{}", std_out);
+    std_out
 }
